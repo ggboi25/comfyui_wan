@@ -41,10 +41,10 @@ mkdir -p models/text_encoders
 mkdir -p models/vae
 
 # Download models in parallel
-download_file "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan2_1-I2V-14B-480P_fp8_e4m3fn.safetensors" "models/diffusion_models/Wan2_1-I2V-14B-480P_fp8_e4m3fn.safetensors"
-download_file "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/open-clip-xlm-roberta-large-vit-huge-14_visual_fp16.safetensors" "models/text_encoders/open-clip-xlm-roberta-large-vit-huge-14_visual_fp16.safetensors"
-download_file "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/umt5-xxl-enc-fp8_e4m3fn.safetensors" "models/text_encoders/umt5-xxl-enc-fp8_e4m3fn.safetensors"
-download_file "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan2_1_VAE_fp32.safetensors" "models/vae/Wan2_1_VAE_fp32.safetensors"
+download_file "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan2_1-I2V-14B-480P_fp8_e4m3fn.safetensors" "models/diffusion_models/Wan2_1-I2V-14B-480P_fp8_e4m3fn.safetensors" &
+download_file "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/open-clip-xlm-roberta-large-vit-huge-14_visual_fp16.safetensors" "models/text_encoders/open-clip-xlm-roberta-large-vit-huge-14_visual_fp16.safetensors" &
+download_file "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/umt5-xxl-enc-fp8_e4m3fn.safetensors" "models/text_encoders/umt5-xxl-enc-fp8_e4m3fn.safetensors" &
+download_file "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan2_1_VAE_fp32.safetensors" "models/vae/Wan2_1_VAE_fp32.safetensors" &
 
 # Wait for all downloads to finish
 wait
