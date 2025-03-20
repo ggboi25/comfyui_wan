@@ -12,11 +12,11 @@ fi
 
 cd /workspace/ComfyUI
 
-# Step 3: Install dependencies in the background
+# Step 2: Install dependencies in the background
 echo "📦 Installing dependencies..."
 pip install -r requirements.txt > /workspace/install_logs.txt 2>&1 &
 
-# Step 2: Start ComfyUI immediately in the background
+# Step 3: Start ComfyUI immediately in the background
 echo "🚀 Starting ComfyUI..."
 python main.py --listen 0.0.0.0 &  # Runs in the background
 
@@ -38,4 +38,3 @@ echo "✅ ComfyUI is running! Installations are happening in the background."
 echo "📜 Logs:"
 echo "- Dependencies: /workspace/install_logs.txt"
 echo "- Custom Nodes: /workspace/custom_nodes_log.txt"
-echo "- Model Downloads: /workspace/models_log.txt"
