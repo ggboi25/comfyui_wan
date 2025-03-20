@@ -1,93 +1,66 @@
 #!/bin/bash
 
-# Set up environment
-export DEBIAN_FRONTEND=noninteractive
+# Define the installation directory (volume mount)
+INSTALL_DIR="/workspace"  # Change to /data if necessary
 
-# Update system and install required packages
-apt update && apt install -y git wget
+# Ensure the install directory exists
+mkdir -p $INSTALL_DIR
+cd $INSTALL_DIR
 
-# Upgrade pip
-pip install --upgrade pip
-
-# STEP 1: Install ComfyUI
+# Install ComfyUI inside the volume
+echo "Cloning ComfyUI into $INSTALL_DIR..."
 git clone https://github.com/comfyanonymous/ComfyUI.git
 cd ComfyUI
-
-# Install ComfyUI dependencies
 pip install -r requirements.txt
 
-# STEP 2: Install custom_nodes
-cd custom_nodes
+# Install custom nodes inside the volume
+echo "Installing custom nodes..."
+cd $INSTALL_DIR/ComfyUI/custom_nodes
 
 # Install ComfyUI-Manager
 git clone https://github.com/ltdrdata/ComfyUI-Manager.git
 cd ComfyUI-Manager
-[ -f "requirements.txt" ] && pip install -r requirements.txt
+pip install -r requirements.txt
 cd ..
 
 # Install ComfyUI-WanVideoWrapper
 git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git
 cd ComfyUI-WanVideoWrapper
-[ -f "requirements.txt" ] && pip install -r requirements.txt
+pip install -r requirements.txt
 cd ..
 
-# Return to ComfyUI directory
-cd ..
+# Download and place models inside the correct folders
+echo "Downloading models..."
 
-# STEP 3: Download models
-cd models
-
-# Download diffusion model
-cd diffusion_models
-wget -q --show-progress -O Wan2_1-I2V-14B-480P_fp8_e4m3fn.safetensors \
+mkdir -p $INSTALL_DIR/ComfyUI/models/diffusion_models
+wget -O $INSTALL_DIR/ComfyUI/models/diffusion_models/Wan2_1-I2V-14B-480P_fp8_e4m3fn.safetensors \
     https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan2_1-I2V-14B-480P_fp8_e4m3fn.safetensors
-cd ..
 
-# Download text encoders
-cd text_encoders
-wget -q --show-progress -O open-clip-xlm-roberta-large-vit-huge-14_visual_fp16.safetensors \
+mkdir -p $INSTALL_DIR/ComfyUI/models/text_encoders
+wget -O $INSTALL_DIR/ComfyUI/models/text_encoders/open-clip-xlm-roberta-large-vit-huge-14_visual_fp16.safetensors \
     https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/open-clip-xlm-roberta-large-vit-huge-14_visual_fp16.safetensors
 
-wget -q --show-progress -O umt5-xxl-enc-fp8_e4m3fn.safetensors \
+wget -O $INSTALL_DIR/ComfyUI/models/text_encoders/umt5-xxl-enc-fp8_e4m3fn.safetensors \
     https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/umt5-xxl-enc-fp8_e4m3fn.safetensors
-cd ..
 
-# Download VAE model
-cd VAE
-wget -q --show-progress -O Wan2_1_VAE_fp32.safetensors \
+mkdir -p $INSTALL_DIR/ComfyUI/models/VAE
+wget -O $INSTALL_DIR/ComfyUI/models/VAE/Wan2_1_VAE_fp32.safetensors \
     https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan2_1_VAE_fp32.safetensors
-cd ..
 
-# Download LoRA models from CivitAI
-cd loras
+# Download LoRAs from CivitAI (check if API is needed)
+mkdir -p $INSTALL_DIR/ComfyUI/models/loras
+wget -O $INSTALL_DIR/ComfyUI/models/loras/model_1549343.safetensors \
+    "https://civitai.com/api/download/models/1549343?type=Model&format=SafeTensor"
 
-# Set CivitAI API Key if needed (optional)
-CIVITAI_API_KEY="YOUR_CIVITAI_API_KEY"
+wget -O $INSTALL_DIR/ComfyUI/models/loras/model_1516873.safetensors \
+    "https://civitai.com/api/download/models/1516873?type=Model&format=SafeTensor"
 
-# Check if API key is provided and use it if available
-if [ -n "$CIVITAI_API_KEY" ]; then
-    wget --header="Authorization: Bearer $CIVITAI_API_KEY" -q --show-progress -O model_1549343.safetensors \
-        "https://civitai.com/api/download/models/1549343?type=Model&format=SafeTensor"
+wget -O $INSTALL_DIR/ComfyUI/models/loras/model_1475095.safetensors \
+    "https://civitai.com/api/download/models/1475095?type=Model&format=SafeTensor"
 
-    wget --header="Authorization: Bearer $CIVITAI_API_KEY" -q --show-progress -O model_1516873.safetensors \
-        "https://civitai.com/api/download/models/1516873?type=Model&format=SafeTensor"
+# Navigate back to the ComfyUI directory
+cd $INSTALL_DIR/ComfyUI
 
-    wget --header="Authorization: Bearer $CIVITAI_API_KEY" -q --show-progress -O model_1475095.safetensors \
-        "https://civitai.com/api/download/models/1475095?type=Model&format=SafeTensor"
-else
-    wget -q --show-progress -O model_1549343.safetensors \
-        "https://civitai.com/api/download/models/1549343?type=Model&format=SafeTensor"
-
-    wget -q --show-progress -O model_1516873.safetensors \
-        "https://civitai.com/api/download/models/1516873?type=Model&format=SafeTensor"
-
-    wget -q --show-progress -O model_1475095.safetensors \
-        "https://civitai.com/api/download/models/1475095?type=Model&format=SafeTensor"
-fi
-cd ..
-
-# Return to ComfyUI directory
-cd ..
-
-# STEP 4: Start ComfyUI
-python main.py
+# Start ComfyUI with external access
+echo "Starting ComfyUI..."
+python main.py --listen 0.0.0.0
