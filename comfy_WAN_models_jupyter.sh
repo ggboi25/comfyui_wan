@@ -17,7 +17,7 @@ wget -O models/text_encoders/umt5-xxl-enc-fp8_e4m3fn.safetensors \
     "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/umt5-xxl-enc-fp8_e4m3fn.safetensors"
 
 # Download VAE model
-wget -O models/vae/Wan2_1_VAE_fp32.safetensors \
-    "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan2_1_VAE_fp32.safetensors"
+wget -O models/vae/Wan2_1_VAE_fp16.safetensors \
+    "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan2_1_VAE_bf16.safetensors"
 
 echo "Model downloads complete!"
