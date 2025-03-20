@@ -31,6 +31,10 @@ python main.py --listen 0.0.0.0 &  # Runs in the background
     git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git
     cd ComfyUI-WanVideoWrapper
     pip install -r requirements.txt
+    cd ..
+    git https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git
+    cd comfyui-videohelpersuite
+    pip install -r requirements.txt
     echo "✅ Custom Nodes Installed."
 ) > /workspace/custom_nodes_log.txt 2>&1 &
 
