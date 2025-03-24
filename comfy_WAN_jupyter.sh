@@ -1,5 +1,7 @@
 #!/bin/bash
 #wget -O /workspace/downloads.sh https://raw.githubusercontent.com/ggboi25/comfyui_wan/main/comfy_WAN_jupyter.sh
+#chmod +x ./downloads.sh
+#./downloads.sh
 
 echo "🚀 Setting up ComfyUI inside /workspace..."
 
